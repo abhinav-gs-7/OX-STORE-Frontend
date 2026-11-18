@@ -6,9 +6,9 @@ function ProductCard({ product, onAddToCart }) {
   return (
     <Box
       sx={{
-        borderRadius: 3,
+        borderRadius: 2,
         overflow: "hidden",
-        backgroundColor: "white",
+        backgroundColor: "secondary.Text",
         boxShadow: 2,
         transition: "0.3s",
         "&:hover": {

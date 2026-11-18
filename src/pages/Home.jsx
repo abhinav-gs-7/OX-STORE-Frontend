@@ -10,8 +10,8 @@ import ChairIcon from "@mui/icons-material/Chair";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import CheckroomIcon from "@mui/icons-material/Checkroom";
 import KitchenIcon from "@mui/icons-material/Kitchen";
-
-import heroImage from "../assets/R.png";
+import heroImage from "../assets/homeimage.jpg";
+import Toolbar from "@mui/material/Toolbar";
 function Home({
   products,
   onAddToCart,
@@ -21,18 +21,22 @@ function Home({
   cart,
   increaseQuantity,
   decreaseQuantity,
+  productsRef,
+  onProductsClick
 }) {
   return (
     <div>
       <Box
         sx={{
           display: "flex",
-          alignItems: "flex-start",
-          minHeight: "700px",
+          minHeight: "709px",
           minWidth: "1440",
+          alignItems: "flex-start",
           backgroundImage: `url(${heroImage})`,
-          backgroundSize: "cover",
           backgroundPosition: "center",
+          backgroundColor: "orange",
+          paddingTop: 1,
+          backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
           justifyContent: "start",
         }}
@@ -52,18 +56,23 @@ function Home({
           </Typography>
           <Button
             variant="contained"
+            onClick={onProductsClick}
             endIcon={<ShoppingBagIcon />}
             sx={{
               backgroundColor: "black",
               color: "white",
               borderRadius: "8px",
+              width: "90px",
+              height: "35px",
+              fontSize: "10px",
+
               "&:hover": {
                 backgroundColor: "white",
                 color: "orange",
               },
             }}
           >
-            Shop Now
+            Shop
           </Button>{" "}
         </Box>
       </Box>
@@ -79,7 +88,7 @@ function Home({
         <Typography variant="h4" sx={{ fontWeight: "bold", mb: 3 }}>
           Shop by Category
         </Typography>
-        <Grid container spacing={3}>
+        <Grid container spacing={5}>
           {[
             { name: "Mobiles", icon: <PhoneAndroidIcon /> },
             { name: "Laptops", icon: <LaptopIcon /> },
@@ -88,10 +97,10 @@ function Home({
             { name: "Fashion", icon: <CheckroomIcon /> },
             { name: "Appliances", icon: <KitchenIcon /> },
           ].map((category) => (
-            <Grid key={category.name} size={{ xs: 20, sm: 4, md: 4 }}>
+            <Grid key={category.name} size={{ xs: 4, sm: 4, md: 4 }}>
               <Box
                 sx={{
-                  backgroundColor: "#FFF2E5",
+                  backgroundColor: "secondary",
                   padding: 3,
                   borderRadius: 3,
                   textAlign: "center",
@@ -99,8 +108,8 @@ function Home({
                   transition: "0.3s",
 
                   "&:hover": {
-                    backgroundColor: "#FF6B00",
-                    color: "white",
+                    backgroundColor: "primary.main",
+                    color: "primary.Text",
                     transform: "translateX(-15px)",
                   },
                 }}
@@ -123,13 +132,16 @@ function Home({
         </Grid>
       </Box>
 
-      <Box sx={{ padding: 4 }}>
+      <Box ref={productsRef} sx={{ padding: 4, scrollMarginTop: "90px" }}>
         <Typography variant="h4" sx={{ fontWeight: "bold", mb: 3 }}>
           Newly added
         </Typography>
         <Grid container spacing={3}>
           {products.map((product) => (
-            <Grid key={product.id} size={{ xs: 12, sm: 6, md: 3 }}>
+            <Grid
+              key={product.id}
+              size={{ xs: 12, sm: 6, md: 3, gap: { xs: "90px" } }}
+            >
               <ProductCard product={product} onAddToCart={onAddToCart} />
             </Grid>
           ))}
@@ -137,9 +149,10 @@ function Home({
       </Box>
       {/* Sell your stuff CTA */}
       <Box
+        size
         sx={{
-          backgroundColor: "#FF6B00",
-          color: "white",
+          backgroundColor: "primary.main",
+          color: "secondary.main",
           display: "flex",
           borderRadius: 3,
           mx: 4,
@@ -147,10 +160,11 @@ function Home({
           p: 5,
           textAlign: "center",
           transform: "translateY(-15px)",
-          "&:hover": {
-            backgroundColor: "white",
-            color: "black",
-          },
+          display: "flex",
+          alignItems: "flex-start",
+
+          flexDirection: "column",
+          justifyContent: "start",
         }}
       >
         <Typography variant="h4" fontWeight="bold" gutterBottom>
@@ -158,24 +172,21 @@ function Home({
         </Typography>
 
         <Typography variant="body1" sx={{ mb: 3 }}>
-          Give your unused items a new home. Someone might need them!
+          Ready to sell your Unused Item ?
         </Typography>
-
-        <Button
-          variant="contained"
-          sx={{
-            backgroundColor: "white",
-            color: "#FF6B00",
-            fontWeight: "bold",
-            transition: "0.3s",
-            "&:hover": {
-              backgroundColor: "#FF6B00",
-              color: "black",
-            },
-          }}
-        >
-          Post Your Ad
-        </Button>
+        <Box sx={{ display: "flex", alignItems: "end", justifyContent: "end" }}>
+          <Button
+            variant="contained"
+            sx={{
+              backgroundColor: "white",
+              color: "primay.main",
+              fontWeight: "bold",
+              transition: "0.3s",
+            }}
+          >
+            Post Your Ad
+          </Button>
+        </Box>
       </Box>
 
       {/* Footer */}
@@ -184,7 +195,7 @@ function Home({
         sx={{
           backgroundColor: "#222222",
           color: "white",
-          mt: 5,
+          mt: 4,
           px: 5,
           py: 4,
         }}
@@ -200,7 +211,7 @@ function Home({
               OX STORE
             </Typography>
 
-            <Typography variant="body2" sx={{ mt: 2, color: "#cccccc" }}>
+            <Typography variant="body2" sx={{ mt: 4, color: "#cccccc" }}>
               Give your unused items a new home. Buy and sell pre-owned products
               easily with OX STORE.
             </Typography>
