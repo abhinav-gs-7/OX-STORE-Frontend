@@ -1,6 +1,5 @@
 import { Box, Paper, Typography, Stack, Button } from "@mui/material";
 
-import { Link as RouterLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 export default function About() {
@@ -8,12 +7,15 @@ export default function About() {
 
   return (
     <Box
-      component="main"
+      component="main" //<main>	Main content of the page
       sx={{
         display: "flex",
-        margin: "15px",
+        margin: "40px",
       }}
     >
+      {/* Stack is a Material UI layout component. It arranges its children in a
+      vertical or horizontal direction. By default, Stack uses:
+      direction="column" */}
       <Stack spacing={3}>
         <Typography variant="h3" fontWeight="bold" textAlign="center">
           About OX STORE
@@ -26,7 +28,6 @@ export default function About() {
           shopping cart.
         </Typography>
 
-
         <Typography variant="h5" fontWeight="bold">
           What we offer
         </Typography>
@@ -38,7 +39,14 @@ export default function About() {
           {"\n"}• A convenient shopping experience
         </Typography>
 
-        <Button onClick={()=>navigate("/")} variant="contained" size="small">
+        <Button
+          onClick={() => navigate("/")}
+          variant="contained"
+          size="small"
+          sx={{
+            alignSelf: "flex-start",
+          }}
+        >
           Explore Products
         </Button>
       </Stack>

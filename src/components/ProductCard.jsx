@@ -7,13 +7,12 @@ function ProductCard({ product, onAddToCart }) {
     <Box
       sx={{
         borderRadius: 2,
-        overflow: "hidden",
+        overflow: "hidden", //Without overflow: "hidden", an image or child element might extend beyond the card's rounded corners.
         backgroundColor: "secondary.Text",
         boxShadow: 2,
         transition: "0.3s",
         "&:hover": {
           transform: "translateY(-15px)",
-          boxShadow: 2,
         },
       }}
     >
@@ -21,7 +20,7 @@ function ProductCard({ product, onAddToCart }) {
       <Box
         sx={{
           height: 180,
-          backgroundColor: "#FFF2E5",
+          backgroundColor: "secondary.Text",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -32,28 +31,29 @@ function ProductCard({ product, onAddToCart }) {
           src={product.image}
           alt={product.name}
           sx={{
-            width: "100%",
-            height: "180px",
-            objectFit: "contain",
-            display: "block",
+            width: "90%",
+            height: "140px",
+            borderRadius: 2,
+            objectFit: "scale-down",
+            //By default, an <img> tag is an inline element (display: inline), meaning it behaves like a word in a sentence. Setting display: "block" changes that behavior
           }}
         />
       </Box>
 
       {/* Product details */}
-      <Box sx={{ p: 2 }}>
+      <Box sx={{ p: 2 } } >
         <Typography variant="h6" fontWeight="bold">
           {product.name}
         </Typography>
 
-        <Typography variant="h6" color="primary">
+        <Typography variant="h6" color="primary.main">
           ₹{product.price}
         </Typography>
 
         <Button
           variant="contained"
           fullWidth
-          sx={{ mt: 2, backgroundColor: "#FF6B00" }}
+          sx={{ mt: 2, backgroundColor: "primary.main" }}
           onClick={() => onAddToCart(product)}
         >
           Add to Cart

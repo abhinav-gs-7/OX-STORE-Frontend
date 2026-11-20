@@ -18,6 +18,7 @@ import Box from "@mui/material/Box";
 import iphoneImage from "./assets/iphone.jpg";
 import shoesImage from "./assets/shoes.jpg";
 import laptopImage from "./assets/laptop.jpg";
+import Samsung from "./assets/image.png";
 import { useNavigate } from "react-router-dom";
 import Toolbar from "@mui/material/Toolbar";
 import Profile from "./pages/Profile";
@@ -53,36 +54,55 @@ function App() {
       name: "Samsum-M52-5G",
       price: 35000,
       category: "Mobiles",
-      image: laptopImage,
+      image: Samsung,
     },
   ];
 
   const [cart, setCart] = useState([]);
   const [userAddress, setUserAddress] = useState(null);
   const [registeredUser, setRegisteredUser] = useState(null);
-const [isLoggedIn, setIsLoggedIn] = useState(false);
-  function saveRegistration(userData) {
-    console.log("Received registration:", userData);
-    setRegisteredUser(userData);
-    setUserAddress(userData.address);
-  }
-  function updateUserProfile(updatedUser) {
-    setRegisteredUser(updatedUser);
-    setUserAddress(updatedUser.address);
-  }
-  console.log("Current cart:", cart);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const total = cart.reduce((acc, item) => {
     return acc + item.price * item.quantity;
   }, 0);
-  const productsRef = useRef(null);
-  const navigate = useNavigate();
+  //reduce() is a JavaScript array method.
 
-  // const scrollToProducts = () => {
-  //   productsRef.current?.scrollIntoView({
-  //     behavior: "smooth",
-  //     block: "start",
-  //   });
-  // };
+// Its job is to take all elements of an array and combine them into one final value.
+  const productsRef = useRef(null); //Hold a reference/value //
+
+  //   This creates a JavaScript object:
+  // {
+  //   current: null
+  // }
+
+  // Now connect it to a React element:
+  // <Box ref={productsRef}>
+  //   Newly Added Products
+  // </Box>
+
+  // After React renders the component, the object becomes conceptually:
+  // {
+  //   current: HTMLDivElement
+  // }
+
+  // Now you can access the actual HTML element through
+  const navigate = useNavigate();
+  const scrollToContact = () => {
+    if (location.pathname === "/") { //location is a browser-provided object pathname gives us the path portion of the current URL.
+      document.getElementById("contact")?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    } else {
+      navigate("/");
+      setTimeout(() => {
+        document.getElementById("contact")?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }, 150);
+    }
+  };
   const scrollToProducts = () => {
     if (window.location.pathname === "/") {
       productsRef.current?.scrollIntoView({
@@ -100,9 +120,30 @@ const [isLoggedIn, setIsLoggedIn] = useState(false);
       }, 100);
     }
   };
-  function addToCart(product) {
-    console.log("addToCart received:", product);
+  const cartCount = cart.reduce((total, item) => {
+    return total + item.quantity;
+  }, 0);
+  const [search, setSearch] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const filteredProducts = Products.filter((product) => {
+    const matchesSearch = product.name
+      .toLowerCase()
+      .includes(search.toLowerCase());
+    const matchescategory =
+      selectedCategory === "All" || product.category === selectedCategory;
+    return matchesSearch && matchescategory;
+  });
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  function saveRegistration(userData) {
+    setRegisteredUser(userData);
+    setUserAddress(userData.address);
+  }
+  function updateUserProfile(updatedUser) {
+    setRegisteredUser(updatedUser);
+    setUserAddress(updatedUser.address);
+  }
 
+  function addToCart(product) {
     const existingProduct = cart.find((item) => item.id === product.id);
     if (existingProduct) {
       setCart((previousCart) =>
@@ -148,23 +189,16 @@ const [isLoggedIn, setIsLoggedIn] = useState(false);
       });
     });
   }
-  const cartCount = cart.reduce((total, item) => {
-    return total + item.quantity;
-  }, 0);
-  const [search, setSearch] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("All");
-  const filteredProducts = Products.filter((product) => {
-    const matchesSearch = product.name
-      .toLowerCase()
-      .includes(search.toLowerCase());
-    const matchescategory =
-      selectedCategory === "All" || product.category === selectedCategory;
-    return matchesSearch && matchescategory;
-  });
-  const [drawerOpen, setDrawerOpen] = useState(false);
+
   return (
     <div>
-      <Navbar onProductsClick={scrollToProducts} cartCount={cartCount} />
+      <Navbar
+        onProductsClick={scrollToProducts}
+        cartCount={cartCount}
+        search={search}
+        onContactClick={scrollToContact}
+        setSearch={setSearch}
+      />
       <Toolbar />
       <Routes>
         <Route
@@ -187,15 +221,19 @@ const [isLoggedIn, setIsLoggedIn] = useState(false);
         <Route
           path="/cart"
           element={
-            <Cart
-              cart={cart}
-              increaseQuantity={increaseQuantity}
-              decreaseQuantity={deecreaseQuantity}
-              removeFromCart={removeFromCart}
-              total={total}
-              recommendedProducts={Products}
-              userAddress={userAddress}
-            />
+            // isLoggedIn && registeredUser ? (
+              <Cart
+                cart={cart}
+                increaseQuantity={increaseQuantity}
+                decreaseQuantity={deecreaseQuantity}
+                removeFromCart={removeFromCart}
+                total={total}
+                recommendedProducts={Products}
+                userAddress={userAddress}
+              />
+            // ) : (
+            //   <Navigate to="/profile" replace />
+            // )
           }
         />
         <Route
@@ -204,6 +242,12 @@ const [isLoggedIn, setIsLoggedIn] = useState(false);
             <Profile
               registeredUser={registeredUser}
               onLogin={() => setIsLoggedIn(true)}
+              onLogout={() => {
+                setIsLoggedIn(false);
+                setRegisteredUser(null);
+                setUserAddress(null);
+                navigate("/");
+              }}
             />
           }
         />
@@ -231,65 +275,4 @@ const [isLoggedIn, setIsLoggedIn] = useState(false);
   );
 }
 
-function Welcome(props) {
-  return <h1>{props.n}</h1>;
-}
-
-// function ProductCard({ id, name, price, category, onAddtoCart, product }) {
-//   return (
-//     <>
-//       <h5>{id}</h5>
-//       <h3>
-//         {name} {category}
-//       </h3>
-//       <p>{price}</p>
-//       <button onClick={() => onAddtoCart(product)}>Add to Cart</button>
-//     </>
-//   );
-// }
-
 export default App;
-
-{
-  /* <Welcome n="OX" />
-      <h1>I sell what I don't need</h1>
-      <input
-        type="text"
-        placeholder="Seacrh products"
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-      />
-      <button onClick={() => setSelectedCategory("All")}>All</button>
-      <button onClick={() => setSelectedCategory("Electronics")}>
-        Electronics
-      </button>
-      <button onClick={() => setSelectedCategory("Fashion")}>fashion</button>;
-      {/* <ProductCard name="iphone" price={50000} category="Mobiles" /> */
-}
-//   {filteredProducts.map((product) => {
-//     return (
-//       <ProductCard
-//         key={product.id}
-//         id={product.id}
-//         name={product.name}
-//         price={product.price}
-//         product={product}
-//         category={product.category}
-//         onAddtoCart={addToCart}
-//       />
-//     );
-//   })}
-//   <h2>Cart Count:{cart.length}</h2>
-//   <h2>Cart Products:</h2>
-//   {cart.map((item) => (
-//     <div>
-//       <p>
-//         {item.name}-${item.price} *{item.quantity}
-//       </p>
-//       <button onClick={() => deecreaseQuantity(item.id)}>- </button>
-//       <button onClick={() => increaseQuantity(item.id)}>+</button>
-//     </div>
-//   ))}
-//   <h3>TOtal price:${total}</h3>
-//   <button onClick={() => setcount(count + 1)}>Add</button>
-// </div> */}

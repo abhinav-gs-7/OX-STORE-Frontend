@@ -15,7 +15,7 @@ import heroImage from "../assets/Group 2014.png";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
-export default function Profile({ registeredUser, onLogin }) {
+export default function Profile({ registeredUser, onLogin, onLogout, isLoggedIn}) {
   const [rememberMe, setRememberMe] = useState(false);
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -26,6 +26,31 @@ export default function Profile({ registeredUser, onLogin }) {
   function handleLogin(event) {
     event.preventDefault();
 
+    if (isLoggedIn && registeredUser) {
+      return (
+        <Box sx={{ maxWidth: 600, mx: "auto", mt: 5, p: 4 }}>
+          <Paper elevation={4} sx={{ p: 4, borderRadius: 4 }}>
+            <Typography variant="h4" fontWeight="bold" gutterBottom>
+              My Profile
+            </Typography>
+
+            <Typography>Name: {registeredUser.name}</Typography>
+            <Typography>Email: {registeredUser.email}</Typography>
+            <Typography>Address: {registeredUser.address}</Typography>
+
+            <Button
+              variant="contained"
+              color="error"
+              fullWidth
+              sx={{ mt: 4 }}
+              onClick={onLogout}
+            >
+              Logout
+            </Button>
+          </Paper>
+        </Box>
+      );
+    }
     if (!registeredUser) {
       setError("No account found. Please register first.");
       return;
@@ -53,7 +78,7 @@ export default function Profile({ registeredUser, onLogin }) {
     <Alert severity="error" variant="filled">
       {error}
     </Alert>
-  </Snackbar>
+  </Snackbar>;
   return (
     <Box
       component="main"

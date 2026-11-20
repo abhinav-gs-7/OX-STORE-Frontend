@@ -22,7 +22,7 @@ function Home({
   increaseQuantity,
   decreaseQuantity,
   productsRef,
-  onProductsClick
+  onProductsClick,
 }) {
   return (
     <div>
@@ -34,7 +34,6 @@ function Home({
           alignItems: "flex-start",
           backgroundImage: `url(${heroImage})`,
           backgroundPosition: "center",
-          backgroundColor: "orange",
           paddingTop: 1,
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
@@ -47,7 +46,7 @@ function Home({
             flexDirection: "column",
             alignItems: "flex-start",
             gap: 2,
-            padding: 2,
+            padding: 5,
           }}
         >
           <Typography variant="h2">Sell What You Don't Need</Typography>
@@ -59,16 +58,16 @@ function Home({
             onClick={onProductsClick}
             endIcon={<ShoppingBagIcon />}
             sx={{
-              backgroundColor: "black",
-              color: "white",
+              backgroundColor: "secondary.main",
+              color: "secondary.Text",
               borderRadius: "8px",
               width: "90px",
               height: "35px",
               fontSize: "10px",
 
               "&:hover": {
-                backgroundColor: "white",
-                color: "orange",
+                backgroundColor: "primary.Text",
+                color: "primary.main",
               },
             }}
           >
@@ -80,7 +79,6 @@ function Home({
         sx={{
           padding: 1,
           margin: "10px",
-
           display: "flex",
           flexDirection: "column",
         }}
@@ -97,10 +95,16 @@ function Home({
             { name: "Fashion", icon: <CheckroomIcon /> },
             { name: "Appliances", icon: <KitchenIcon /> },
           ].map((category) => (
-            <Grid key={category.name} size={{ xs: 4, sm: 4, md: 4 }}>
+            <Grid key={category.name} size={4}>
               <Box
+                onClick={() => {
+                  setSelectedCategory(category.name);
+                  productsRef.current?.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                  });
+                }}
                 sx={{
-                  backgroundColor: "secondary",
                   padding: 3,
                   borderRadius: 3,
                   textAlign: "center",
@@ -110,16 +114,16 @@ function Home({
                   "&:hover": {
                     backgroundColor: "primary.main",
                     color: "primary.Text",
-                    transform: "translateX(-15px)",
+                    transform: "translateX(-10px)",
                   },
                 }}
               >
                 <Box
                   sx={{
                     mb: 1,
-                    color: "orange",
+                    color: "primary.main",
                     transition: "0.3s",
-                    "&:hover": { color: "black" },
+                    "&:hover": { color: "secondary.main" },
                   }}
                 >
                   {category.icon}
@@ -132,93 +136,62 @@ function Home({
         </Grid>
       </Box>
 
-      <Box ref={productsRef} sx={{ padding: 4, scrollMarginTop: "90px" }}>
+      <Box ref={productsRef} sx={{ padding: 4, scrollMarginTop: "40px" }}>
         <Typography variant="h4" sx={{ fontWeight: "bold", mb: 3 }}>
-          Newly added
+          Products
         </Typography>
-        <Grid container spacing={3}>
-          {products.map((product) => (
-            <Grid
-              key={product.id}
-              size={{ xs: 12, sm: 6, md: 3, gap: { xs: "90px" } }}
+
+        {products.length > 0 ? (
+          <Grid container spacing={3}>
+            {products.map((product) => (
+              <Grid key={product.id} size={{ xs: 12, sm: 6, md: 3 }}>
+                <ProductCard product={product} onAddToCart={onAddToCart} />
+              </Grid>
+            ))}
+          </Grid>
+        ) : (
+          <Box sx={{ textAlign: "center", py: 5 }}>
+            <Typography variant="h6">No products found!</Typography>
+            <Typography>
+              Try another search or select a different category.
+            </Typography>
+            <Button
+              sx={{ mt: 2 }}
+              variant="contained"
+              onClick={() => setSelectedCategory("All")}
             >
-              <ProductCard product={product} onAddToCart={onAddToCart} />
-            </Grid>
-          ))}
-        </Grid>
-      </Box>
-      {/* Sell your stuff CTA */}
-      <Box
-        size
-        sx={{
-          backgroundColor: "primary.main",
-          color: "secondary.main",
-          display: "flex",
-          borderRadius: 3,
-          mx: 4,
-          my: 5,
-          p: 5,
-          textAlign: "center",
-          transform: "translateY(-15px)",
-          display: "flex",
-          alignItems: "flex-start",
-
-          flexDirection: "column",
-          justifyContent: "start",
-        }}
-      >
-        <Typography variant="h4" fontWeight="bold" gutterBottom>
-          Got stuff you don't use?
-        </Typography>
-
-        <Typography variant="body1" sx={{ mb: 3 }}>
-          Ready to sell your Unused Item ?
-        </Typography>
-        <Box sx={{ display: "flex", alignItems: "end", justifyContent: "end" }}>
-          <Button
-            variant="contained"
-            sx={{
-              backgroundColor: "white",
-              color: "primay.main",
-              fontWeight: "bold",
-              transition: "0.3s",
-            }}
-          >
-            Post Your Ad
-          </Button>
-        </Box>
+              View all products
+            </Button>
+          </Box>
+        )}
       </Box>
 
       {/* Footer */}
       <Box
+        id="contact"
         component="footer"
         sx={{
-          backgroundColor: "#222222",
-          color: "white",
+          backgroundColor: "secondary.main",
+          color: "secondary.Text",
           mt: 4,
           px: 5,
           py: 4,
         }}
       >
-        <Grid container spacing={4}>
+        <Grid container spacing={5}>
           {/* Store branding */}
           <Grid size={{ xs: 12, md: 4 }}>
-            <Typography
-              variant="h5"
-              fontWeight="bold"
-              sx={{ color: "#FF6B00" }}
-            >
+            <Typography variant="h5" fontWeight="bold">
               OX STORE
             </Typography>
 
-            <Typography variant="body2" sx={{ mt: 4, color: "#cccccc" }}>
-              Give your unused items a new home. Buy and sell pre-owned products
-              easily with OX STORE.
+            <Typography variant="body1" sx={{ mt: 4, color: "primary.Text" }}>
+              Buy products easily with OX STORE.
             </Typography>
           </Grid>
 
           {/* Quick links */}
-          <Grid size={{ xs: 12, md: 4 }}>
+          <Grid  size={{ xs: 12, md: 4 }}>
             <Typography variant="h6" fontWeight="bold">
               Quick Links
             </Typography>
@@ -238,11 +211,11 @@ function Home({
               Contact Us
             </Typography>
 
-            <Typography variant="body2" sx={{ mt: 2, color: "#cccccc" }}>
+            <Typography variant="body2" sx={{ mt: 2 }}>
               Email: oxstoresupport@oxstore.com
             </Typography>
 
-            <Typography variant="body2" sx={{ mt: 1, color: "#cccccc" }}>
+            <Typography variant="body2" sx={{ mt: 1 }}>
               Location: Coimbatore, Tamil Nadu
             </Typography>
           </Grid>
@@ -250,13 +223,13 @@ function Home({
 
         <Box
           sx={{
-            borderTop: "1px solid #555555",
+            borderTop: "1px solid",
             mt: 4,
             pt: 2,
             textAlign: "center",
           }}
         >
-          <Typography variant="body2" color="#aaaaaa">
+          <Typography variant="body2">
             © 2026 OX STORE. All rights reserved.
           </Typography>
         </Box>

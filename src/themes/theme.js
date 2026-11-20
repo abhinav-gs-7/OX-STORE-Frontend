@@ -31,7 +31,7 @@ const theme = createTheme({
   typography: {
     fontFamily: "Inter, Arial, sans-serif",
     button: {
-      textTransform: "none",
+      textTransform: "none", //It keeps the text in the exact capitalization you typed
       fontWeight: 600,
     },
   },

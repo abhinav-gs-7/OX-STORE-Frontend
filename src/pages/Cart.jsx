@@ -32,7 +32,7 @@ function Cart({
   const [delivery, setDelivery] = useState("pickup");
   const [promoCode, setPromoCode] = useState("");
 
-  const formatPrice = (price) => `₹${price.toLocaleString("en-IN")}`;
+  const formatPrice = (price) => `₹${price.toLocaleString("en-IN")}`; //toLocaleString("en-IN")	Formats the number using Indian number grouping
   const navigate = useNavigate();
 
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
@@ -71,16 +71,17 @@ function Cart({
               gridTemplateColumns: {
                 md: "2fr 1fr", //means the first column gets twice the available space of the second column.
               },
-              gap: 5,
+              gap: 4,
             }}
           >
             <Paper sx={{ p: 2, borderRadius: 3 }}>
-              <Stack spacing={2}>
+              <Stack spacing={3}>
                 {cart.map((item) => (
                   <Card
                     key={item.id}
-                    elevation={0}
+                    elevation={1}
                     sx={{
+                      backgroundColor: "background.default",
                       display: "flex",
                       alignItems: "center",
                       gap: 2,
@@ -102,7 +103,8 @@ function Cart({
                     {/* //flex: 1 tells this element to take up the remaining
                     available space in the flex container */}
                     <Box sx={{ flex: 1, minWidth: 100 }}>
-                      <Stack spacing={1.5}>
+                      <Stack spacing={1}
+                      >
                         <Typography fontWeight="bold">{item.name}</Typography>
 
                         <Typography variant="body2" color="text.secondary">
@@ -172,7 +174,6 @@ function Cart({
                 Order summary
               </Typography>
 
-
               <Typography>{userAddress.house}</Typography>
 
               <Typography>{userAddress.street}</Typography>
@@ -194,16 +195,7 @@ function Cart({
                 </Typography>
               </Stack>
 
-              <Stack direction="row" spacing={1} sx={{ mt: 2.4 }}>
-                <TextField
-                  size="small"
-                  fullWidth
-                  placeholder=" Any Promo code"
-                  value={promoCode}
-                  onChange={(event) => setPromoCode(event.target.value)}
-                />
-                <Button variant="text">Apply</Button>
-              </Stack>
+            
 
               <Button
                 variant="contained"
