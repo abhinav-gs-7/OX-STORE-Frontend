@@ -25,8 +25,15 @@ import Register from "./pages/Register";
 import ForgotPassword from "./pages/ForgotPassword";
 import UserProfile from "./pages/UserProfile";
 import { Navigate } from "react-router-dom";
+import AdminLayout from "./admin/AdminLayout";
+import Dashboard from "./admin/pages/Dashboard";
+import Orders from "./admin/pages/Orders";
+import Products from "./admin/pages/Products";
+import Customers from "./admin/pages/Customers";
+import Reports from "./admin/pages/Reports";
+import { useLocation } from "react-router-dom";
 function App() {
-  const Products = [
+  const productsData = [
     {
       id: 1,
       name: "iphone",
@@ -56,6 +63,8 @@ function App() {
       image: laptopImage,
     },
   ];
+  const location = useLocation();
+  const isAdminRoute = location.pathname.startsWith("/admin");
 
   const [cart, setCart] = useState([]);
   const [userAddress, setUserAddress] = useState(null);
@@ -153,7 +162,7 @@ const [isLoggedIn, setIsLoggedIn] = useState(false);
   }, 0);
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const filteredProducts = Products.filter((product) => {
+  const filteredProducts = productsData.filter((product) => {
     const matchesSearch = product.name
       .toLowerCase()
       .includes(search.toLowerCase());
@@ -164,8 +173,12 @@ const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   return (
     <div>
-      <Navbar onProductsClick={scrollToProducts} cartCount={cartCount} />
-      <Toolbar />
+      {!isAdminRoute && (
+        <>
+          <Navbar onProductsClick={scrollToProducts} cartCount={cartCount} />
+          <Toolbar />
+        </>
+      )}
       <Routes>
         <Route
           path="/"
@@ -193,7 +206,7 @@ const [isLoggedIn, setIsLoggedIn] = useState(false);
               decreaseQuantity={deecreaseQuantity}
               removeFromCart={removeFromCart}
               total={total}
-              recommendedProducts={Products}
+              recommendedProducts={productsData}
               userAddress={userAddress}
             />
           }
@@ -226,6 +239,13 @@ const [isLoggedIn, setIsLoggedIn] = useState(false);
             )
           }
         />
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<Dashboard />} />
+          <Route path="orders" element={<Orders />} />
+          <Route path="products" element={<Products />} />
+          <Route path="customers" element={<Customers />} />
+          <Route path="reports" element={<Reports />} />
+        </Route>
       </Routes>
     </div>
   );
